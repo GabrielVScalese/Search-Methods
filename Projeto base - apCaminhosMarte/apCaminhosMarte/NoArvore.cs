@@ -14,6 +14,8 @@ namespace apCaminhosMarte
         private NoArvore<Dado> esq;
         // Atributo que representa o ramo descendente direito
         private NoArvore<Dado> dir;
+        private int altura;
+        private bool estaMarcadoParaMorrer;
 
         // Construtor da classe
         public NoArvore(Dado info, NoArvore<Dado> esq, NoArvore<Dado> dir)
@@ -21,6 +23,7 @@ namespace apCaminhosMarte
             Info = info;
             Esq = esq;
             Dir = dir;
+            Altura = 0;
         }
 
         // Propriedade do atributo info
@@ -66,6 +69,18 @@ namespace apCaminhosMarte
                 return false;
 
             return info.Equals(obj.info);
+        }
+
+        public int Altura 
+        { 
+            get => altura; 
+            set => altura = value; 
+        }
+
+        public bool EstaMarcadoParaMorrer
+        { 
+            get => estaMarcadoParaMorrer; 
+            set => estaMarcadoParaMorrer = value;
         }
     }
 }

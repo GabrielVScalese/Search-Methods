@@ -64,9 +64,9 @@ namespace apCaminhosMarte
                 raiz = new NoArvore<Dado>(info, null, null);
             else
                 if (info.CompareTo(antecessor.Info) < 0)
-                    antecessor.Esq = new NoArvore<Dado>(info, null, null);
-                else
-                    antecessor.Dir = new NoArvore<Dado>(info, null, null);
+                antecessor.Esq = new NoArvore<Dado>(info, null, null);
+            else
+                antecessor.Dir = new NoArvore<Dado>(info, null, null);
         }
 
         // Método auxiliar que verifica a existência de uma determinada informação
@@ -88,12 +88,12 @@ namespace apCaminhosMarte
                 }
                 else
                     if (info.CompareTo(atual.Info) == 0)
-                        return true;
-                    else
-                    {
-                        antecessor = atual;
-                        atual = atual.Dir;
-                    }
+                    return true;
+                else
+                {
+                    antecessor = atual;
+                    atual = atual.Dir;
+                }
             }
         }
 
@@ -139,6 +139,76 @@ namespace apCaminhosMarte
                 g.DrawString(Convert.ToString(raiz.Info.ToString()), new Font("Comic Sans", 10, FontStyle.Bold),
                 new SolidBrush(Color.Black), xf - 23, yf - 7);
             }
+        }
+
+        public int getAltura(NoArvore<Dado> no)
+        {
+            if (no != null)
+                return no.Altura;
+            else
+                return -1;
+        }
+
+        /*public NoArvore<Dado> InserirBalanceado(Dado item, ref NoArvore<Dado> noAtual)
+        {
+            if (noAtual == null)
+                noAtual = new NoArvore<Dado>(item, null, null);
+            else
+            {
+                if (item.CompareTo(noAtual.Info) < 0)
+                {
+                    noAtual.Esq = InserirBalanceado(item, ref noAtual.Esq);
+                    if (getAltura(noAtual.Esq) - getAltura(noAtual.Dir) == 2) // getAltura testa nulo
+                        if (item.CompareTo(noAtual.Esq.Info) < 0)
+                            noAtual = RotacaoSimplesComFilhoEsquerdo(noAtual);
+                        else
+                            noAtual = RotacaoDuplaComFilhoEsquerdo(noAtual);
+                }
+                else
+                if (item.CompareTo(noAtual.Info) > 0)
+                {
+                    noAtual.Dir = InserirBalanceado(item, ref noAtual.Dir);
+                    if (getAltura(noAtual.Dir) - getAltura(noAtual.Esq) == 2) // getAltura testa nulo
+                        if (item.CompareTo(noAtual.Dir.Info) > 0)
+                            noAtual = RotacaoSimplesComFilhoDireito(noAtual);
+                        else
+                            noAtual = RotacaoDuplaComFilhoDireito(noAtual);
+                }
+                //else ; - não faz nada, valor duplicado
+                noAtual.Altura = Math.Max(getAltura(noAtual.Esq), getAltura(noAtual.Dir)) + 1;
+                Application.DoEvents();
+            }
+            return noAtual;
+        }*/
+
+        private NoArvore<Dado> RotacaoSimplesComFilhoEsquerdo(NoArvore<Dado> no)
+        {
+            NoArvore<Dado> temp = no.Esq;
+            no.Esq = temp.Dir;
+            temp.Dir = no;
+            no.Altura = Math.Max(getAltura(no.Esq), getAltura(no.Dir)) + 1;
+            temp.Altura = Math.Max(getAltura(temp.Esq), getAltura(no)) + 1;
+            return temp;
+        }
+
+        private NoArvore<Dado> RotacaoSimplesComFilhoDireito(NoArvore<Dado> no)
+        {
+            NoArvore<Dado> temp = no.Dir;
+            no.Dir = temp.Esq;
+            temp.Esq = no;
+            no.Altura = Math.Max(getAltura(no.Esq), getAltura(no.Dir)) + 1;
+            temp.Altura = Math.Max(getAltura(temp.Dir), getAltura(no)) + 1;
+            return temp;
+        }
+        private NoArvore<Dado> RotacaoDuplaComFilhoEsquerdo(NoArvore<Dado> no)
+        {
+            no.Esq = RotacaoSimplesComFilhoDireito(no.Esq);
+            return RotacaoSimplesComFilhoEsquerdo(no);
+        }
+        private NoArvore<Dado> RotacaoDuplaComFilhoDireito(NoArvore<Dado> no)
+        {
+            no.Dir = RotacaoSimplesComFilhoEsquerdo(no.Dir);
+            return RotacaoSimplesComFilhoDireito(no);
         }
     }
 }

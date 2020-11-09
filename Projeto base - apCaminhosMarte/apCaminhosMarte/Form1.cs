@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Net.NetworkInformation;
@@ -62,7 +63,6 @@ namespace apCaminhosMarte
             }
 
             long elapsedMs = 0;
-            var watch = System.Diagnostics.Stopwatch.StartNew();
 
             foreach (RadioButton rdo in gbMetodo.Controls.OfType<RadioButton>())
             {
@@ -73,14 +73,10 @@ namespace apCaminhosMarte
                 {
                     case "rbPilhas":
                         caminhos = grafo.ProcurarCaminhos (idOrigem, idDestino);
-                        watch.Stop();
-                        elapsedMs = watch.ElapsedMilliseconds;
                         break;
 
                     case "rbRecursao":
                         caminhos = grafo.ProcurarCaminhosRec (idOrigem, idDestino);
-                        watch.Stop();
-                        elapsedMs = watch.ElapsedMilliseconds;
                         break;
 
                     /*case "rbDijkstra":
@@ -96,15 +92,9 @@ namespace apCaminhosMarte
             }
 
             if (caminhos.GetQtd() == 0)
-            {
-                MessageBox.Show("Tempo de execução: " + elapsedMs + " milissegundos");
                 MessageBox.Show("Nenhum caminho foi encontrado!");
-            }
             else
-            {
-                MessageBox.Show("Tempo de execução: " + elapsedMs + " milissegundos");
                 MessageBox.Show("Número de caminhos encontrados: " + caminhos.GetQtd().ToString());
-            }
         }
 
         // Método que obtém a cidade de origem escolhida pelo usuário
