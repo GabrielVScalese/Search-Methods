@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Schema;
 
 namespace apCaminhosMarte
 {
@@ -12,10 +14,18 @@ namespace apCaminhosMarte
     {
         // Atributo que representa a cidade de origem
         private int origem;
-        // Atributo que representa a cidade de destino
         private int destino;
         // Atributo que representa os dados do percurso
         private LigacaoCidade lc;
+        private int indice;
+
+        public Movimento (int origem , int destino, LigacaoCidade lc, int indice)
+        {
+            Origem = origem;
+            Destino = destino;
+            Lc = lc;
+            Indice = indice;
+        }
 
         // Construtor da classe
         public Movimento (int origem, int destino, LigacaoCidade lc)
@@ -38,7 +48,6 @@ namespace apCaminhosMarte
             }
         }
 
-        // Propriedade do atributo destino
         public int Destino
         {
             get => destino;
@@ -64,6 +73,18 @@ namespace apCaminhosMarte
             }
         }
 
+        public int Indice
+        {
+            get => indice;
+            set
+            {
+                if (value < 0)
+                    throw new Exception("Indice invalido");
+
+                indice = value;
+            }
+        }
+
         // Método de comparação entre um objeto da classe e outro objeto
         public override bool Equals (Object obj)
         {
@@ -81,8 +102,6 @@ namespace apCaminhosMarte
             if (origem != mov.Origem)
                 return false;
 
-            if (destino != mov.Destino)
-                return false;
 
             if (!lc.Equals(mov.Lc))
                 return false;
@@ -99,7 +118,7 @@ namespace apCaminhosMarte
         // Método que retorna o valor do objeto da classe em formato string
         public override string ToString()
         {
-            return "| O: " + origem + " | D:" + destino + " | Dados: " + lc;
+            return "| O: " + origem + " | Dados: " + lc;
         }
     }
 }
