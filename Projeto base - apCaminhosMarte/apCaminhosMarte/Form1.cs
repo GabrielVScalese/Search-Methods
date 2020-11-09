@@ -56,7 +56,7 @@ namespace apCaminhosMarte
             }
 
            
-            if (!gbMetodo.Controls.OfType<RadioButton>().Any(rb => rb.Checked))
+            if (!groupBox2.Controls.OfType<RadioButton>().Any(rb => rb.Checked))
             {
                 MessageBox.Show("Selecione o método desejado!");
                 return;
@@ -64,7 +64,7 @@ namespace apCaminhosMarte
 
             long elapsedMs = 0;
 
-            foreach (RadioButton rdo in gbMetodo.Controls.OfType<RadioButton>())
+            foreach (RadioButton rdo in groupBox2.Controls.OfType<RadioButton>())
             {
                 if (rdo.Checked == false)
                     continue;
@@ -298,12 +298,15 @@ namespace apCaminhosMarte
                 switch (rdo.Name)
                 {
                     case "rbDistancia": melhorCaminho = MelhorCaminhoDist();
+                                        txtTotal.Text = ObterDistancia(melhorCaminho) + "";
                         break;
 
                     case "rbTempo": melhorCaminho = MelhorCaminhoTemp();
+                                    txtTotal.Text = ObterTempo(melhorCaminho) + "";
                         break;
 
                     case "rbCusto": melhorCaminho = MelhorCaminhoCusto();
+                                    txtTotal.Text = ObterCusto(melhorCaminho) + "";
                         break;
                 }
             }
