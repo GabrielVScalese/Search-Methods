@@ -23,6 +23,7 @@ namespace apCaminhosMarte
         private GrafoBacktracking grafo;
         // Pilha contendo todos os caminhos possíveis entre duas cidades
         private PilhaLista<PilhaLista<Movimento>> caminhos;
+        private PilhaLista<Movimento> melhorCaminho;
 
         public FrmMapa()
         {
@@ -46,18 +47,63 @@ namespace apCaminhosMarte
                 MessageBox.Show("Destino é igual à origem!");
                 return;
             }
-                
-            caminhos = grafo.ProcurarCaminhos(idOrigem, idDestino);
-            if (caminhos.GetQtd() == 0)
-                MessageBox.Show("Nenhum caminho foi encontrado!");
-            else
-                MessageBox.Show("Número de caminhos encontrados: " + caminhos.GetQtd().ToString());
+
+            if (!gbCriterio.Controls.OfType<RadioButton>().Any(rb => rb.Checked))
+            {
+                MessageBox.Show("Selecione o critério desejado!");
+                return;
+            }
+
+           
+            if (!gbMetodo.Controls.OfType<RadioButton>().Any(rb => rb.Checked))
+            {
+                MessageBox.Show("Selecione o método desejado!");
+                return;
+            }
+
+            long elapsedMs = 0;
+            var watch = System.Diagnostics.Stopwatch.StartNew();
+
+            foreach (RadioButton rdo in gbMetodo.Controls.OfType<RadioButton>())
+            {
+                if (rdo.Checked == false)
+                    continue;
+
+                switch (rdo.Name)
+                {
+                    case "rbPilhas":
+                        caminhos = grafo.ProcurarCaminhos (idOrigem, idDestino);
+                        watch.Stop();
+                        elapsedMs = watch.ElapsedMilliseconds;
+                        break;
+
+                    case "rbRecursao":
+                        caminhos = grafo.ProcurarCaminhosRec (idOrigem, idDestino);
+                        watch.Stop();
+                        elapsedMs = watch.ElapsedMilliseconds;
+                        break;
+
+                    /*case "rbDijkstra":
+                        break;*/
+                }
+            }
 
             LimparDados();
             if (caminhos.GetQtd() > 0)
             {
                 ExibirCaminhos();
                 ExibirMelhorCaminho();
+            }
+
+            if (caminhos.GetQtd() == 0)
+            {
+                MessageBox.Show("Tempo de execução: " + elapsedMs + " milissegundos");
+                MessageBox.Show("Nenhum caminho foi encontrado!");
+            }
+            else
+            {
+                MessageBox.Show("Tempo de execução: " + elapsedMs + " milissegundos");
+                MessageBox.Show("Número de caminhos encontrados: " + caminhos.GetQtd().ToString());
             }
         }
 
@@ -86,7 +132,7 @@ namespace apCaminhosMarte
         }
 
         // Método que verifica qual caminho é mais curto dentre os caminhos obtidos
-        private PilhaLista<Movimento> MelhorCaminho ()
+        private PilhaLista<Movimento> MelhorCaminhoDist ()
         {
             No<PilhaLista<Movimento>> umCaminho = caminhos.Inicio;
             PilhaLista<Movimento> melhorCaminho = umCaminho.Info;
@@ -96,6 +142,43 @@ namespace apCaminhosMarte
                     break;
 
                 if (ObterDistancia(umCaminho.Info) > ObterDistancia(umCaminho.Prox.Info))
+                    melhorCaminho = umCaminho.Prox.Info;
+
+                umCaminho = umCaminho.Prox;
+            }
+
+            return melhorCaminho;
+        }
+
+        private PilhaLista<Movimento> MelhorCaminhoTemp ()
+        {
+            No<PilhaLista<Movimento>> umCaminho = caminhos.Inicio;
+            PilhaLista<Movimento> melhorCaminho = umCaminho.Info;
+
+            while (umCaminho != null)
+            {
+                if (umCaminho.Prox == null)
+                    break;
+
+                if (ObterTempo(umCaminho.Info) > ObterTempo(umCaminho.Prox.Info))
+                    melhorCaminho = umCaminho.Prox.Info;
+
+                umCaminho = umCaminho.Prox;
+            }
+
+            return melhorCaminho;
+        }
+
+        private PilhaLista<Movimento> MelhorCaminhoCusto ()
+        {
+            No<PilhaLista<Movimento>> umCaminho = caminhos.Inicio;
+            PilhaLista<Movimento> melhorCaminho = umCaminho.Info;
+            while (umCaminho != null)
+            {
+                if (umCaminho.Prox == null)
+                    break;
+
+                if (ObterCusto(umCaminho.Info) > ObterCusto(umCaminho.Prox.Info))
                     melhorCaminho = umCaminho.Prox.Info;
 
                 umCaminho = umCaminho.Prox;
@@ -217,7 +300,24 @@ namespace apCaminhosMarte
         // Método que exibe no dgvMelhorCaminho, o melhor caminho encontrado
         private void ExibirMelhorCaminho ()
         {
-            var melhorCaminho = MelhorCaminho();
+            foreach (RadioButton rdo in gbCriterio.Controls.OfType<RadioButton>())
+            {
+                if (rdo.Checked == false)
+                    continue;
+
+                switch (rdo.Name)
+                {
+                    case "rbDistancia": melhorCaminho = MelhorCaminhoDist();
+                        break;
+
+                    case "rbTempo": melhorCaminho = MelhorCaminhoTemp();
+                        break;
+
+                    case "rbCusto": melhorCaminho = MelhorCaminhoCusto();
+                        break;
+                }
+            }
+
             dgvMelhorCaminho.RowCount = 1;
             dgvMelhorCaminho.ColumnCount = melhorCaminho.GetQtd() + 1;
             InicializarColunas(dgvMelhorCaminho.ColumnCount, dgvMelhorCaminho);
@@ -324,8 +424,8 @@ namespace apCaminhosMarte
         // Evento click do dgvMelhorCaminho que obtém o caminho selecionado pelo usuário e desenha o mesmo
         private void dgvMelhorCaminho_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            var umCaminho = ObterUmCaminho(dgvMelhorCaminho.SelectedCells[0].RowIndex);
-            DesenharCaminho(umCaminho);
+            MessageBox.Show("Distância a ser percorrida: " + ObterDistancia(melhorCaminho) + "\nTempo a ser gasto: " + ObterTempo(melhorCaminho) + "\nCusto necessário: " + ObterCusto(melhorCaminho));
+            DesenharCaminho(melhorCaminho);
         }
     }
 }

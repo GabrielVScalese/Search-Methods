@@ -101,7 +101,7 @@ namespace apCaminhosMarte
             return ProcurarCaminhos(destino);
         }
 
-        public PilhaLista<PilhaLista<Movimento>> ProcurarCaminhos (int destino)
+        private PilhaLista<PilhaLista<Movimento>> ProcurarCaminhos (int destino)
         {
             int i = 0;
             loop:  while (i < matriz.GetLength(0))
