@@ -39,7 +39,7 @@ namespace apCaminhosMarte
                 int y = int.Parse(linha.Substring(23, 5));
 
                 var cidadeMarte = new CidadeMarte(id, nomeCidade, x, y);
-                arvoreBinaria.InserirInfo(cidadeMarte);
+                arvoreBinaria.InserirBalanceado(cidadeMarte, arvoreBinaria.Raiz);
             }
 
             arquivo.Close();
