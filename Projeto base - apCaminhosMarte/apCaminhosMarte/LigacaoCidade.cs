@@ -26,6 +26,11 @@ namespace apCaminhosMarte
             Custo = custo;
         }
 
+        public LigacaoCidade (int distancia)
+        {
+            Distancia = distancia;
+        }
+
         // Propriedade do atributo distancia
         public int Distancia
         {

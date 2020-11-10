@@ -25,6 +25,7 @@ namespace apCaminhosMarte
         // Pilha contendo todos os caminhos possíveis entre duas cidades
         private PilhaLista<PilhaLista<Movimento>> caminhos;
         private PilhaLista<Movimento> melhorCaminho;
+        private Grafo oGrafo;
 
         public FrmMapa()
         {
@@ -36,6 +37,7 @@ namespace apCaminhosMarte
         {
             int idOrigem = GetOrigem();
             int idDestino = GetDestino();
+            string[] percurso = new string[23];
 
             if (idOrigem == -1 || idDestino == -1)
             {
@@ -62,8 +64,6 @@ namespace apCaminhosMarte
                 return;
             }
 
-            long elapsedMs = 0;
-
             foreach (RadioButton rdo in groupBox2.Controls.OfType<RadioButton>())
             {
                 if (rdo.Checked == false)
@@ -79,8 +79,14 @@ namespace apCaminhosMarte
                         caminhos = grafo.ProcurarCaminhosRec (idOrigem, idDestino);
                         break;
 
-                    /*case "rbDijkstra":
-                        break;*/
+                    case "rbDijkstra": percurso = oGrafo.Caminho(idOrigem, idDestino);
+                        if (percurso.Length == 0)
+                            MessageBox.Show("Nenhum caminho foi encontrado");
+                        else
+                            MessageBox.Show("Número de caminhos encontrados: 1");
+                            ExibirDijkstra(percurso);
+                            DesenharCaminho(percurso);
+                            goto retorno;
                 }
             }
 
@@ -95,6 +101,8 @@ namespace apCaminhosMarte
                 MessageBox.Show("Nenhum caminho foi encontrado!");
             else
                 MessageBox.Show("Número de caminhos encontrados: " + caminhos.GetQtd().ToString());
+
+            retorno: return;
         }
 
         // Método que obtém a cidade de origem escolhida pelo usuário
@@ -337,6 +345,8 @@ namespace apCaminhosMarte
         {
             grafo = new GrafoBacktracking(@"C:\Users\gabri\Downloads\CaminhosEntreCidadesMarte.txt");
             arvoreCidades = new ArvoreCidades(@"C:\Users\gabri\Downloads\CidadesMarte.txt");
+            caminhos = new PilhaLista<PilhaLista<Movimento>>();
+            InicializarGrafo();
         }
 
         // Evento click do tbControl que desenha a árvore de cidades
@@ -344,6 +354,38 @@ namespace apCaminhosMarte
         {
             Graphics g = pbArvore.CreateGraphics();
             arvoreCidades.DesenharCidades(pbArvore.Width / 2, 5, g,  3 * Math.PI/ 2, 1.1, 260);
+        }
+
+        private void DesenharCaminho (string[] percurso)
+        {
+            pbMapa.Refresh();
+            int i = 0;
+            while (i < percurso.Length - 1)
+            {
+                var pontoInicial = arvoreCidades.GetCidade(int.Parse(percurso[i]));
+                var pontoFinal = arvoreCidades.GetCidade(int.Parse(percurso[i + 1]));
+
+                double x = pontoInicial.X;
+                double y = pontoInicial.Y;
+                double xf = pontoFinal.X;
+                double yf = pontoFinal.Y;
+
+                GetProporcao(ref x, ref y);
+                GetProporcao(ref xf, ref yf);
+
+                Pen caneta = new Pen(Color.Red);
+                caneta.Width = 3;
+
+                Graphics g = pbMapa.CreateGraphics();
+
+                g.FillEllipse(new SolidBrush(Color.Black), Convert.ToInt32(x - 5), Convert.ToInt32(y - 5), 10, 10);
+                g.DrawLine(caneta, Convert.ToInt32(x), Convert.ToInt32(y), Convert.ToInt32(xf), Convert.ToInt32(yf));
+                g.DrawString(pontoInicial.NomeCidade.Trim(), new Font("Comic Sans", 10, FontStyle.Bold), new SolidBrush(Color.Black), Convert.ToInt32(x - 10), Convert.ToInt32(y - 20));
+                g.DrawString(pontoFinal.NomeCidade.Trim(), new Font("Comic Sans", 10, FontStyle.Bold), new SolidBrush(Color.Black), Convert.ToInt32(xf - 10), Convert.ToInt32(yf - 20));
+                g.FillEllipse(new SolidBrush(Color.Black), Convert.ToInt32(xf - 5), Convert.ToInt32(yf - 5), 10, 10);
+
+                i++;
+            }
         }
 
         // Método que desenha no picture box, o caminho selecionado pelo usuário
@@ -373,9 +415,7 @@ namespace apCaminhosMarte
                 g.DrawLine(caneta, Convert.ToInt32(x), Convert.ToInt32(y), Convert.ToInt32(xf), Convert.ToInt32(yf));
                 g.DrawString(pontoInicial.NomeCidade.Trim(), new Font("Comic Sans", 10, FontStyle.Bold), new SolidBrush(Color.Black), Convert.ToInt32(x - 10), Convert.ToInt32(y - 20));
                 g.DrawString(pontoFinal.NomeCidade.Trim(), new Font("Comic Sans", 10, FontStyle.Bold), new SolidBrush(Color.Black), Convert.ToInt32(xf - 10), Convert.ToInt32(yf - 20));
-                
-                if (umMovimento.Prox == null)
-                    g.FillEllipse(new SolidBrush(Color.Black), Convert.ToInt32(xf - 5), Convert.ToInt32(yf - 5), 10, 10);
+                g.FillEllipse(new SolidBrush(Color.Black), Convert.ToInt32(xf - 5), Convert.ToInt32(yf - 5), 10, 10);
 
                 umMovimento = umMovimento.Prox;
             }
@@ -419,6 +459,28 @@ namespace apCaminhosMarte
         {
             MessageBox.Show("Distância a ser percorrida: " + ObterDistancia(melhorCaminho) + "\nTempo a ser gasto: " + ObterTempo(melhorCaminho) + "\nCusto necessário: " + ObterCusto(melhorCaminho));
             DesenharCaminho(melhorCaminho);
+        }
+
+        private void InicializarGrafo ()
+        {
+            oGrafo = new Grafo(grafo, @"C:\Users\gabri\Downloads\CidadesMarteOrdenado.txt", @"C:\Users\gabri\Downloads\CaminhosEntreCidadesMarte.txt");
+        }
+
+        private void ExibirDijkstra (string[] percurso)
+        {
+            dgvCaminhos.RowCount = 1;
+            dgvCaminhos.ColumnCount = percurso.Length;
+
+            InicializarColunas(dgvCaminhos.ColumnCount, dgvCaminhos);
+
+            for (int col = 0; col < dgvCaminhos.ColumnCount; col++)
+            {
+                var cidade = arvoreCidades.GetCidade(int.Parse(percurso[col]));
+
+                dgvCaminhos[col, 0].Value = cidade.NomeCidade;
+            }
+
+            dgvCaminhos.Refresh();
         }
     }
 }
