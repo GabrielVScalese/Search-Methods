@@ -37,7 +37,7 @@ namespace apCaminhosMarte
         {
             int idOrigem = GetOrigem();
             int idDestino = GetDestino();
-            string[] percurso = new string[23];
+            Movimento[] percurso = new Movimento[23];
 
             if (idOrigem == -1 || idDestino == -1)
             {
@@ -79,14 +79,15 @@ namespace apCaminhosMarte
                         caminhos = grafo.ProcurarCaminhosRec (idOrigem, idDestino);
                         break;
 
-                    case "rbDijkstra": percurso = oGrafo.Caminho(idOrigem, idDestino);
-                        if (percurso.Length == 0)
-                            MessageBox.Show("Nenhum caminho foi encontrado");
-                        else
-                            MessageBox.Show("Número de caminhos encontrados: 1");
-                            ExibirDijkstra(percurso);
-                            DesenharCaminho(percurso);
-                            goto retorno;
+                    case "rbDijkstra":  InicializarGrafo();
+                                        percurso = oGrafo.Caminho(idOrigem, idDestino);
+                                        if (percurso.Length == 0)
+                                            MessageBox.Show("Nenhum caminho foi encontrado");
+                                        else
+                                            MessageBox.Show("Número de caminhos encontrados: 1");
+                                            ExibirDijkstra(percurso);
+                                            DesenharCaminho(percurso);
+                                            goto retorno;
                 }
             }
 
@@ -346,7 +347,6 @@ namespace apCaminhosMarte
             grafo = new GrafoBacktracking(@"C:\Users\gabri\Downloads\CaminhosEntreCidadesMarte.txt");
             arvoreCidades = new ArvoreCidades(@"C:\Users\gabri\Downloads\CidadesMarte.txt");
             caminhos = new PilhaLista<PilhaLista<Movimento>>();
-            InicializarGrafo();
         }
 
         // Evento click do tbControl que desenha a árvore de cidades
@@ -356,14 +356,14 @@ namespace apCaminhosMarte
             arvoreCidades.DesenharCidades(pbArvore.Width / 2, 5, g,  3 * Math.PI/ 2, 1.1, 260);
         }
 
-        private void DesenharCaminho (string[] percurso)
+        private void DesenharCaminho (Movimento[] percurso)
         {
             pbMapa.Refresh();
             int i = 0;
             while (i < percurso.Length - 1)
             {
-                var pontoInicial = arvoreCidades.GetCidade(int.Parse(percurso[i]));
-                var pontoFinal = arvoreCidades.GetCidade(int.Parse(percurso[i + 1]));
+                var pontoInicial = arvoreCidades.GetCidade(percurso[i].Origem);
+                var pontoFinal = arvoreCidades.GetCidade(percurso[i + 1].Origem);
 
                 double x = pontoInicial.X;
                 double y = pontoInicial.Y;
@@ -461,26 +461,63 @@ namespace apCaminhosMarte
             DesenharCaminho(melhorCaminho);
         }
 
-        private void InicializarGrafo ()
+        private RadioButton GetCriterio ()
         {
-            oGrafo = new Grafo(grafo, @"C:\Users\gabri\Downloads\CidadesMarteOrdenado.txt", @"C:\Users\gabri\Downloads\CaminhosEntreCidadesMarte.txt");
+            foreach (RadioButton rdo in gbCriterio.Controls.OfType<RadioButton>())
+                if (rdo.Checked == false)
+                    return rdo;
+
+            return null;
         }
 
-        private void ExibirDijkstra (string[] percurso)
+        private void InicializarGrafo ()
+        {
+            foreach (RadioButton rdo in gbCriterio.Controls.OfType<RadioButton>())
+            {
+                if (rdo.Checked == false)
+                    continue;
+
+                switch (rdo.Name)
+                {
+                    case "rbDistancia": oGrafo = new Grafo(grafo, @"C:\Users\gabri\Downloads\CidadesMarteOrdenado.txt", @"C:\Users\gabri\Downloads\CaminhosEntreCidadesMarte.txt", 0);
+                        break;
+
+                    case "rbTempo": oGrafo = new Grafo(grafo, @"C:\Users\gabri\Downloads\CidadesMarteOrdenado.txt", @"C:\Users\gabri\Downloads\CaminhosEntreCidadesMarte.txt", 1);
+                        break;
+
+                    case "rbCusto": oGrafo = new Grafo(grafo, @"C:\Users\gabri\Downloads\CidadesMarteOrdenado.txt", @"C:\Users\gabri\Downloads\CaminhosEntreCidadesMarte.txt", 2);
+                        break;
+                }
+            }
+        }
+
+        private void ExibirDijkstra (Movimento[] percurso)
         {
             dgvCaminhos.RowCount = 1;
             dgvCaminhos.ColumnCount = percurso.Length;
+            dgvMelhorCaminho.RowCount = 1;
+            dgvMelhorCaminho.ColumnCount = percurso.Length;
 
             InicializarColunas(dgvCaminhos.ColumnCount, dgvCaminhos);
 
             for (int col = 0; col < dgvCaminhos.ColumnCount; col++)
             {
-                var cidade = arvoreCidades.GetCidade(int.Parse(percurso[col]));
+                var cidade = arvoreCidades.GetCidade(percurso[col].Origem);
 
                 dgvCaminhos[col, 0].Value = cidade.NomeCidade;
             }
 
+            InicializarColunas(dgvMelhorCaminho.ColumnCount, dgvMelhorCaminho);
+
+            for (int col = 0; col < dgvMelhorCaminho.ColumnCount; col++)
+            {
+                var cidade = arvoreCidades.GetCidade(percurso[col].Origem);
+
+                dgvMelhorCaminho[col, 0].Value = cidade.NomeCidade;
+            }
+
             dgvCaminhos.Refresh();
+            dgvMelhorCaminho.Refresh();
         }
     }
 }

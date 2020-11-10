@@ -18,6 +18,13 @@ namespace apCaminhosMarte
         // Atributo que representa os dados do percurso
         private LigacaoCidade lc;
         private int indice;
+        private int totalCriterio;
+
+        public Movimento (string origem, int totalCriterio)
+        {
+            Origem = int.Parse(origem);
+            this.totalCriterio = totalCriterio;
+        }
 
         public Movimento (int origem , int destino, LigacaoCidade lc, int indice)
         {

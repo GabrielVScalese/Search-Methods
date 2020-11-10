@@ -23,7 +23,7 @@ namespace apCaminhosMarte
         int doInicioAteAtual; // global usada para ajustar menor caminho com Djikstra
         int nTree;
 
-        public Grafo (GrafoBacktracking gb, string cidadesArquivo, string caminhosArquivo)
+        public Grafo (GrafoBacktracking gb, string cidadesArquivo, string caminhosArquivo, int criterio)
         {
             vertices = new Vertice[gb.Matriz.GetLength(0)];
             adjMatrix = new int[gb.Matriz.GetLength(0), gb.Matriz.GetLength(0)];
@@ -35,7 +35,7 @@ namespace apCaminhosMarte
                     adjMatrix[j, k] = infinity; // distância tão grande que não existe
 
             percurso = new DistOriginal[adjMatrix.GetLength(0)];
-            LerArquivos(cidadesArquivo, caminhosArquivo);
+            LerArquivos(cidadesArquivo, caminhosArquivo, criterio);
         }
 
         public void NovoVertice (string rotulo)
@@ -49,7 +49,7 @@ namespace apCaminhosMarte
             adjMatrix[origem, destino] = peso;
         }
 
-        public string[] Caminho (int inicioDoPercurso, int finalDoPercurso)
+        public Movimento[] Caminho (int inicioDoPercurso, int finalDoPercurso)
         {
             for (int j = 0; j < numVerts; j++)
                 vertices[j].foiVisitado = false;
@@ -82,25 +82,27 @@ namespace apCaminhosMarte
             return ExibirPercursos(inicioDoPercurso, finalDoPercurso);
         }
 
-        public string[] ExibirPercursos (int inicioPercurso, int fimPercurso)
+        public Movimento[] ExibirPercursos (int inicioPercurso, int fimPercurso)
         {
             int cont = 0;
 
             Stack<string> pilha = new Stack<string>();
+            Stack<int> pilhaTotal = new Stack<int>();
 
             int onde = fimPercurso;
             while (onde != inicioPercurso)
             {
                 onde = percurso[onde].verticePai;
+                pilhaTotal.Push(percurso[onde].distancia);
                 pilha.Push(vertices[onde].rotulo);
                 cont++;
             }
 
             int i = 0;
-            string[] caminho = new string[pilha.Count + 1];
+            Movimento[] caminho = new Movimento[pilha.Count + 1];
             while (pilha.Count != 0)
             {
-                caminho[i] = pilha.Pop();
+                caminho[i] = new Movimento(pilha.Pop(), pilhaTotal.Pop());
 
                 i++;
             }
@@ -108,7 +110,7 @@ namespace apCaminhosMarte
             if ((cont == 1) && (percurso[fimPercurso].distancia == infinity))
                 caminho = null;
             else
-                caminho[i] += vertices[fimPercurso].rotulo;
+                caminho[i] = new Movimento(vertices[fimPercurso].rotulo, percurso[fimPercurso].distancia);
 
             return caminho;
         }
@@ -148,7 +150,7 @@ namespace apCaminhosMarte
                 }
         }
 
-        private void LerArquivos (string cidadesArquivo, string caminhosArquivo)
+        private void LerArquivos (string cidadesArquivo, string caminhosArquivo, int criterio)
         {
             var cidades = new StreamReader(cidadesArquivo);
             var caminhos = new StreamReader(caminhosArquivo);
@@ -167,9 +169,21 @@ namespace apCaminhosMarte
                 string linha = caminhos.ReadLine();
                 int origem = int.Parse(linha.Substring(0, 3));
                 int destino = int.Parse(linha.Substring(3, 3));
-                int distancia = int.Parse(linha.Substring(6, 5));
 
-                NovaAresta(origem, destino, distancia);
+                int aux = 0;
+                switch (criterio)
+                {
+                    case 0: aux = int.Parse(linha.Substring(6, 5));
+                        break;
+
+                    case 1: aux = int.Parse(linha.Substring(11, 4));
+                        break;
+
+                    case 2: aux = int.Parse(linha.Substring(15, 5));
+                        break;
+                }
+
+                NovaAresta(origem, destino, aux);
             }
             caminhos.Close();
         }
