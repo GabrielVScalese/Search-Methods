@@ -8,10 +8,10 @@ namespace apCaminhosMarte
 {
     class DistOriginal
     {
-        public int distancia;
+        public long distancia;
         public int verticePai;
 
-        public DistOriginal(int vp, int d)
+        public DistOriginal(int vp, long d)
         {
             distancia = d;
             verticePai = vp;

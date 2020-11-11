@@ -20,7 +20,7 @@ namespace apCaminhosMarte
         DistOriginal[] percurso;
         int infinity = int.MaxValue;
         int verticeAtual; // global usada para indicar o vértice atualmente sendo visitado
-        int doInicioAteAtual; // global usada para ajustar menor caminho com Djikstra
+        long doInicioAteAtual; // global usada para ajustar menor caminho com Djikstra
         int nTree;
 
         public Grafo (GrafoBacktracking gb, string cidadesArquivo, string caminhosArquivo, int criterio)
@@ -69,7 +69,7 @@ namespace apCaminhosMarte
                 // Procuramos a saída não visitada do vértice inicioDoPercurso com a menor distância
                 int indiceDoMenor = ObterMenor();
                 // e anotamos essa menor distância
-                int distanciaMinima = percurso[indiceDoMenor].distancia;
+                long distanciaMinima = percurso[indiceDoMenor].distancia;
                 // o vértice com a menor distância passa a ser o vértice atual
                 // para compararmos com a distância calculada em AjustarMenorCaminho()
                 verticeAtual = indiceDoMenor;
@@ -87,7 +87,7 @@ namespace apCaminhosMarte
             int cont = 0;
 
             Stack<string> pilha = new Stack<string>();
-            Stack<int> pilhaTotal = new Stack<int>();
+            Stack<long> pilhaTotal = new Stack<long>();
 
             int onde = fimPercurso;
             while (onde != inicioPercurso)
@@ -117,10 +117,10 @@ namespace apCaminhosMarte
 
         public int ObterMenor ()
         {
-            int distanciaMinima = infinity;
+            long distanciaMinima = infinity;
             int indiceDaMinima = 0;
             for (int j = 0; j < numVerts; j++)
-                if (!(vertices[j].foiVisitado) && (percurso[j].distancia < distanciaMinima))
+                if (!(vertices[j].foiVisitado) && (percurso[j].distancia < distanciaMinima) && (percurso[j].distancia != infinity))
                 {
                     distanciaMinima = percurso[j].distancia;
                     indiceDaMinima = j;
@@ -137,11 +137,11 @@ namespace apCaminhosMarte
                     int atualAteMargem = adjMatrix[verticeAtual, coluna];
                     // calculamos a distância desde inicioDoPercurso passando por vertice atual até
                     // esta saída
-                    int doInicioAteMargem = doInicioAteAtual + atualAteMargem;
+                    long doInicioAteMargem = doInicioAteAtual + atualAteMargem;
                     // quando encontra uma distância menor, marca o vértice a partir do
                     // qual chegamos no vértice de índice coluna, e a soma da distância
                     // percorrida para nele chegar
-                    int distanciaDoCaminho = percurso[coluna].distancia;
+                    long distanciaDoCaminho = percurso[coluna].distancia;
                     if (doInicioAteMargem < distanciaDoCaminho)
                     {
                         percurso[coluna].verticePai = verticeAtual;
