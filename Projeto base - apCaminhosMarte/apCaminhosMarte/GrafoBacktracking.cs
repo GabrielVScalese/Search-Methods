@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Drawing.Text;
 using System.IO;
 using System.Linq;
 using System.Runtime.ExceptionServices;
@@ -174,6 +175,38 @@ namespace apCaminhosMarte
                 caminhos.Empilhar(pilhaClone);
                 var movimentoAnterior = pilha.Desempilhar();
                 cidadeAtual = movimentoAnterior.Origem;
+            }
+        }
+
+        public int GetTotalPercurso (Movimento[] percurso, int criterio)
+        {
+            int aux = 0;
+            switch (criterio)
+            {
+                case 0: for (int i = 0; i < percurso.Length - 1; i++)
+                        {
+                            aux += GetValorEntreCidades(percurso[i].Origem, percurso[i + 1].Origem).Distancia;
+                        }
+                break;
+
+                case 1: for (int i = 0; i < percurso.Length - 1; i++)
+                        {
+                            aux += GetValorEntreCidades(percurso[i].Origem, percurso[i + 1].Origem).Tempo;
+                        }
+                break;
+
+                case 2: for (int i = 0; i < percurso.Length - 1; i++)
+                        {
+                            aux += GetValorEntreCidades(percurso[i].Origem, percurso[i + 1].Origem).Custo;
+                        }
+                break;
+            }
+
+            return aux;
+
+            LigacaoCidade GetValorEntreCidades (int origem, int destino)
+            {
+                return matriz[origem, destino];
             }
         }
     }

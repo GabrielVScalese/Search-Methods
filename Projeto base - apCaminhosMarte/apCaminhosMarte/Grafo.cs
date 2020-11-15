@@ -87,13 +87,11 @@ namespace apCaminhosMarte
             int cont = 0;
 
             Stack<string> pilha = new Stack<string>();
-            Stack<long> pilhaTotal = new Stack<long>();
 
             int onde = fimPercurso;
             while (onde != inicioPercurso)
             {
                 onde = percurso[onde].verticePai;
-                pilhaTotal.Push(percurso[onde].distancia);
                 pilha.Push(vertices[onde].rotulo);
                 cont++;
             }
@@ -102,7 +100,7 @@ namespace apCaminhosMarte
             Movimento[] caminho = new Movimento[pilha.Count + 1];
             while (pilha.Count != 0)
             {
-                caminho[i] = new Movimento(pilha.Pop(), pilhaTotal.Pop());
+                caminho[i] = new Movimento(pilha.Pop());
 
                 i++;
             }
@@ -110,7 +108,7 @@ namespace apCaminhosMarte
             if ((cont == 1) && (percurso[fimPercurso].distancia == infinity))
                 caminho = null;
             else
-                caminho[i] = new Movimento(vertices[fimPercurso].rotulo, percurso[fimPercurso].distancia);
+                caminho[i] = new Movimento(vertices[fimPercurso].rotulo);
 
             return caminho;
         }

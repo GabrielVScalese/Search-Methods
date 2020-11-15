@@ -26,6 +26,7 @@ namespace apCaminhosMarte
         private PilhaLista<PilhaLista<Movimento>> caminhos;
         private PilhaLista<Movimento> melhorCaminho;
         private Grafo oGrafo;
+        private int criterio;
 
         public FrmMapa()
         {
@@ -71,12 +72,10 @@ namespace apCaminhosMarte
 
                 switch (rdo.Name)
                 {
-                    case "rbPilhas":
-                        caminhos = grafo.ProcurarCaminhos (idOrigem, idDestino);
+                    case "rbPilhas": caminhos = grafo.ProcurarCaminhos (idOrigem, idDestino);
                         break;
 
-                    case "rbRecursao":
-                        caminhos = grafo.ProcurarCaminhosRec (idOrigem, idDestino);
+                    case "rbRecursao": caminhos = grafo.ProcurarCaminhosRec (idOrigem, idDestino);
                         break;
 
                     case "rbDijkstra":  InicializarGrafo();
@@ -84,10 +83,14 @@ namespace apCaminhosMarte
                                         if (percurso.Length == 0)
                                             MessageBox.Show("Nenhum caminho foi encontrado");
                                         else
+                                        {
                                             MessageBox.Show("Número de caminhos encontrados: 1");
                                             ExibirDijkstra(percurso);
                                             DesenharCaminho(percurso);
+                                            txtTotal.Text = grafo.GetTotalPercurso(percurso, criterio) + "";
                                             goto retorno;
+                                        }
+                        break;           
                 }
             }
 
@@ -140,7 +143,7 @@ namespace apCaminhosMarte
                 if (umCaminho.Prox == null)
                     break;
 
-                if (ObterDistancia(umCaminho.Info) > ObterDistancia(umCaminho.Prox.Info))
+                if (ObterDistancia(melhorCaminho) > ObterDistancia(umCaminho.Prox.Info))
                     melhorCaminho = umCaminho.Prox.Info;
 
                 umCaminho = umCaminho.Prox;
@@ -159,7 +162,7 @@ namespace apCaminhosMarte
                 if (umCaminho.Prox == null)
                     break;
 
-                if (ObterTempo(umCaminho.Info) > ObterTempo(umCaminho.Prox.Info))
+                if (ObterTempo(melhorCaminho) > ObterTempo(umCaminho.Prox.Info))
                     melhorCaminho = umCaminho.Prox.Info;
 
                 umCaminho = umCaminho.Prox;
@@ -177,7 +180,7 @@ namespace apCaminhosMarte
                 if (umCaminho.Prox == null)
                     break;
 
-                if (ObterCusto(umCaminho.Info) > ObterCusto(umCaminho.Prox.Info))
+                if (ObterCusto(melhorCaminho) > ObterCusto(umCaminho.Prox.Info))
                     melhorCaminho = umCaminho.Prox.Info;
 
                 umCaminho = umCaminho.Prox;
@@ -480,12 +483,15 @@ namespace apCaminhosMarte
                 switch (rdo.Name)
                 {
                     case "rbDistancia": oGrafo = new Grafo(grafo, @"C:\Users\gabri\Downloads\CidadesMarteOrdenado.txt", @"C:\Users\gabri\Downloads\CaminhosEntreCidadesMarte.txt", 0);
+                                        criterio = 0;
                         break;
 
                     case "rbTempo": oGrafo = new Grafo(grafo, @"C:\Users\gabri\Downloads\CidadesMarteOrdenado.txt", @"C:\Users\gabri\Downloads\CaminhosEntreCidadesMarte.txt", 1);
+                                    criterio = 1;
                         break;
 
                     case "rbCusto": oGrafo = new Grafo(grafo, @"C:\Users\gabri\Downloads\CidadesMarteOrdenado.txt", @"C:\Users\gabri\Downloads\CaminhosEntreCidadesMarte.txt", 2);
+                                    criterio = 2;
                         break;
                 }
             }
