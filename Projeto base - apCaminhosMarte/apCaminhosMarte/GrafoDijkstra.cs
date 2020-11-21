@@ -9,7 +9,7 @@ using System.Windows.Forms;
 
 namespace apCaminhosMarte
 {
-    class Grafo
+    class GrafoDijkstra
     {
         //private const int NUM_VERTICES = 20;
         private Vertice[] vertices;
@@ -23,7 +23,7 @@ namespace apCaminhosMarte
         long doInicioAteAtual; // global usada para ajustar menor caminho com Djikstra
         int nTree;
 
-        public Grafo (GrafoBacktracking gb, string cidadesArquivo, string caminhosArquivo, int criterio)
+        public GrafoDijkstra (GrafoBacktracking gb, string cidadesArquivo, string caminhosArquivo, int criterio)
         {
             vertices = new Vertice[gb.Matriz.GetLength(0)];
             adjMatrix = new int[gb.Matriz.GetLength(0), gb.Matriz.GetLength(0)];

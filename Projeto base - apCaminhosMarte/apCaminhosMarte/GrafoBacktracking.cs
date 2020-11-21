@@ -203,11 +203,11 @@ namespace apCaminhosMarte
             }
 
             return aux;
+        }
 
-            LigacaoCidade GetValorEntreCidades (int origem, int destino)
-            {
-                return matriz[origem, destino];
-            }
+        public LigacaoCidade GetValorEntreCidades(int origem, int destino)
+        {
+            return matriz[origem, destino];
         }
     }
 }

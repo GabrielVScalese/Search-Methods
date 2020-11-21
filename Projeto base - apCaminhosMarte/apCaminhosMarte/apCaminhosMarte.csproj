@@ -56,7 +56,7 @@
     <Compile Include="Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
-    <Compile Include="Grafo.cs" />
+    <Compile Include="GrafoDijkstra.cs" />
     <Compile Include="GrafoBacktracking.cs" />
     <Compile Include="LigacaoCidade.cs" />
     <Compile Include="ListaSimples.cs" />

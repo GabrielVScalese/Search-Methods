@@ -31,7 +31,9 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FrmMapa));
             this.tbControl = new System.Windows.Forms.TabControl();
             this.tpRotas = new System.Windows.Forms.TabPage();
-            this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.txtTotal = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.gbMetodo = new System.Windows.Forms.GroupBox();
             this.rbDijkstra = new System.Windows.Forms.RadioButton();
             this.rbRecursao = new System.Windows.Forms.RadioButton();
             this.rbPilhas = new System.Windows.Forms.RadioButton();
@@ -63,11 +65,9 @@
             this.pbMapa = new System.Windows.Forms.PictureBox();
             this.tpArvore = new System.Windows.Forms.TabPage();
             this.pbArvore = new System.Windows.Forms.PictureBox();
-            this.label5 = new System.Windows.Forms.Label();
-            this.txtTotal = new System.Windows.Forms.Label();
             this.tbControl.SuspendLayout();
             this.tpRotas.SuspendLayout();
-            this.groupBox2.SuspendLayout();
+            this.gbMetodo.SuspendLayout();
             this.gbCriterio.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMelhorCaminho)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.dgvCaminhos)).BeginInit();
@@ -94,7 +94,7 @@
             // 
             this.tpRotas.Controls.Add(this.txtTotal);
             this.tpRotas.Controls.Add(this.label5);
-            this.tpRotas.Controls.Add(this.groupBox2);
+            this.tpRotas.Controls.Add(this.gbMetodo);
             this.tpRotas.Controls.Add(this.gbCriterio);
             this.tpRotas.Controls.Add(this.btnBuscar);
             this.tpRotas.Controls.Add(this.dgvMelhorCaminho);
@@ -114,17 +114,35 @@
             this.tpRotas.Text = "Rotas entre cidades";
             this.tpRotas.UseVisualStyleBackColor = true;
             // 
-            // groupBox2
+            // txtTotal
             // 
-            this.groupBox2.Controls.Add(this.rbDijkstra);
-            this.groupBox2.Controls.Add(this.rbRecursao);
-            this.groupBox2.Controls.Add(this.rbPilhas);
-            this.groupBox2.Location = new System.Drawing.Point(1191, 83);
-            this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(111, 88);
-            this.groupBox2.TabIndex = 13;
-            this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "Método";
+            this.txtTotal.AutoSize = true;
+            this.txtTotal.Location = new System.Drawing.Point(1124, 506);
+            this.txtTotal.Name = "txtTotal";
+            this.txtTotal.Size = new System.Drawing.Size(61, 13);
+            this.txtTotal.TabIndex = 15;
+            this.txtTotal.Text = "_________";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(1035, 506);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(93, 13);
+            this.label5.TabIndex = 14;
+            this.label5.Text = "Total do percurso:";
+            // 
+            // gbMetodo
+            // 
+            this.gbMetodo.Controls.Add(this.rbDijkstra);
+            this.gbMetodo.Controls.Add(this.rbRecursao);
+            this.gbMetodo.Controls.Add(this.rbPilhas);
+            this.gbMetodo.Location = new System.Drawing.Point(1191, 83);
+            this.gbMetodo.Name = "gbMetodo";
+            this.gbMetodo.Size = new System.Drawing.Size(111, 88);
+            this.gbMetodo.TabIndex = 13;
+            this.gbMetodo.TabStop = false;
+            this.gbMetodo.Text = "Método";
             // 
             // rbDijkstra
             // 
@@ -481,24 +499,6 @@
             this.pbArvore.TabIndex = 0;
             this.pbArvore.TabStop = false;
             // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(1035, 506);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(93, 13);
-            this.label5.TabIndex = 14;
-            this.label5.Text = "Total do percurso:";
-            // 
-            // txtTotal
-            // 
-            this.txtTotal.AutoSize = true;
-            this.txtTotal.Location = new System.Drawing.Point(1124, 506);
-            this.txtTotal.Name = "txtTotal";
-            this.txtTotal.Size = new System.Drawing.Size(61, 13);
-            this.txtTotal.TabIndex = 15;
-            this.txtTotal.Text = "_________";
-            // 
             // FrmMapa
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -511,8 +511,8 @@
             this.tbControl.ResumeLayout(false);
             this.tpRotas.ResumeLayout(false);
             this.tpRotas.PerformLayout();
-            this.groupBox2.ResumeLayout(false);
-            this.groupBox2.PerformLayout();
+            this.gbMetodo.ResumeLayout(false);
+            this.gbMetodo.PerformLayout();
             this.gbCriterio.ResumeLayout(false);
             this.gbCriterio.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvMelhorCaminho)).EndInit();
@@ -552,7 +552,7 @@
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn6;
         private System.Windows.Forms.PictureBox pbArvore;
-        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.GroupBox gbMetodo;
         private System.Windows.Forms.GroupBox gbCriterio;
         private System.Windows.Forms.RadioButton rbDijkstra;
         private System.Windows.Forms.RadioButton rbRecursao;
