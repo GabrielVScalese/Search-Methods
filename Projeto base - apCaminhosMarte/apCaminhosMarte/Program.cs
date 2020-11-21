@@ -6,6 +6,8 @@ using System.Windows.Forms;
 
 namespace apCaminhosMarte
 {
+    // Nome: Gabriel Villar Scalese     RA: 19171
+    // Nome: Guilherme Augusto Teixeira RA: 19174
     static class Program
     {
         /// <summary>
