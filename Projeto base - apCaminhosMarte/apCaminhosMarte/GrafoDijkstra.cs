@@ -148,6 +148,16 @@ namespace apCaminhosMarte
                 }
         }
 
+        public int GetTotalPercurso (Movimento[] percurso)
+        {
+            int total = 0;
+
+            for (int i = 0; i < percurso.Length; i++)
+                total += adjMatrix[percurso[i].Origem, percurso[i].Origem];
+
+            return total;
+        }
+
         private void LerArquivos (string cidadesArquivo, string caminhosArquivo, int criterio)
         {
             var cidades = new StreamReader(cidadesArquivo);

@@ -83,7 +83,7 @@ namespace apCaminhosMarte
             arquivo.Close();
         }
 
-        // Método que chamará a busca de caminhos, preparando variáveis que serão utilizadas na futura busca
+        // Método que chamará a busca de caminhos recursiva, preparando variáveis que serão utilizadas na futura busca
         public PilhaLista<PilhaLista<Movimento>> ProcurarCaminhosRec (int origem, int destino)
         {
             cidadeAtual = origem;
@@ -93,6 +93,7 @@ namespace apCaminhosMarte
             return ProcurarCaminhosRec (destino);
         }
 
+        // Método que chamará a busca de caminhos com pilha, preparando variáveis que serão utilizadas na futura busca
         public PilhaLista<PilhaLista<Movimento>> ProcurarCaminhos (int origem, int destino)
         {
             cidadeAtual = origem;
@@ -102,37 +103,38 @@ namespace apCaminhosMarte
             return ProcurarCaminhos(destino);
         }
 
+        // Método que realiza a busca de caminhos entre duas cidades a partir do uso de pilha
         private PilhaLista<PilhaLista<Movimento>> ProcurarCaminhos (int destino)
         {
             int i = 0;
-            loop:  while (i < matriz.GetLength(0))
+            loop:  while (i < matriz.GetLength(0)) // Testa todas cidades da matriz de adjacências
             {
-                if (matriz[cidadeAtual, i] != null)
+                if (matriz[cidadeAtual, i] != null) // Verifica se existe ligação
                 {
                     var movimentoObtido = new Movimento(cidadeAtual, i, matriz[cidadeAtual, i], i);
                     pilha.Empilhar(movimentoObtido);
                     cidadeAtual = i;
 
-                    if (cidadeAtual == destino)
+                    if (cidadeAtual == destino) // Um caminho foi encontrado
                     {
                         AchouCaminho();
                         goto loop;
                     }
                     else
-                        i = -1;
+                        i = -1; // Tentativa de saída para outra cidade recomeça, a partir de uma nova cidade
                 }
 
                 i++;
             }
 
-            if (pilha.IsVazia())
+            if (pilha.IsVazia()) // Não há mais caminhos
                 return caminhos;
             else
-            {
-                var movimentoAnterior = pilha.Desempilhar();
+            { 
+                var movimentoAnterior = pilha.Desempilhar(); // Uma saída não foi encontrada, portanto volta para uma cidade anterior
                 cidadeAtual = movimentoAnterior.Origem;
                 i = movimentoAnterior.Indice + 1;
-                goto loop;
+                goto loop;  // Tentativa de saída para outra cidade recomeça, a partir de uma cidade anterior e o índice sucessor da mesma 
             }
 
             void AchouCaminho() // Procedimento feito ao encontrar-se um caminho
@@ -145,7 +147,7 @@ namespace apCaminhosMarte
             }
         }
 
-        // Método que realiza a busca de caminhos entre duas cidades
+        // Método que realiza a busca de caminhos entre duas cidades a partir de recursão
         private PilhaLista<PilhaLista<Movimento>> ProcurarCaminhosRec (int destino)
         {
             for (int i = 0; i < matriz.GetLength(0); i++) // Testa todas cidades da matriz de adjacências
@@ -178,34 +180,8 @@ namespace apCaminhosMarte
             }
         }
 
-        public int GetTotalPercurso (Movimento[] percurso, int criterio)
-        {
-            int aux = 0;
-            switch (criterio)
-            {
-                case 0: for (int i = 0; i < percurso.Length - 1; i++)
-                        {
-                            aux += GetValorEntreCidades(percurso[i].Origem, percurso[i + 1].Origem).Distancia;
-                        }
-                break;
-
-                case 1: for (int i = 0; i < percurso.Length - 1; i++)
-                        {
-                            aux += GetValorEntreCidades(percurso[i].Origem, percurso[i + 1].Origem).Tempo;
-                        }
-                break;
-
-                case 2: for (int i = 0; i < percurso.Length - 1; i++)
-                        {
-                            aux += GetValorEntreCidades(percurso[i].Origem, percurso[i + 1].Origem).Custo;
-                        }
-                break;
-            }
-
-            return aux;
-        }
-
-        public LigacaoCidade GetValorEntreCidades(int origem, int destino)
+        // Método que retorna todos os tipos de custo envolvidos em uma ligação de cidades
+        public LigacaoCidade GetLigacaoEntreCidades(int origem, int destino)
         {
             return matriz[origem, destino];
         }

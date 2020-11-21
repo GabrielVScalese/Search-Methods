@@ -24,8 +24,11 @@ namespace apCaminhosMarte
         private GrafoBacktracking grafoBacktracking;
         // Pilha contendo todos os caminhos possíveis entre duas cidades
         private PilhaLista<PilhaLista<Movimento>> caminhos;
+        // Pilha contendo o melhor caminho dentre as pilhas de caminho de caminhos
         private PilhaLista<Movimento> melhorCaminho;
+        // Matriz de adjacências contendo as arestas que representam ligações entre cidades
         private GrafoDijkstra grafoDijkstra;
+        // Inteiro que representa o critério adotado pelo usuário
         private int criterio;
 
         public FrmMapa()
@@ -80,7 +83,7 @@ namespace apCaminhosMarte
                                     var pilhaLista = GetPilha(percurso);
                                     caminhos = new PilhaLista<PilhaLista<Movimento>>();
                                     caminhos.Empilhar(pilhaLista);
-                                    txtTotal.Text = grafoBacktracking.GetTotalPercurso(percurso, criterio) + "";
+                                    txtTotal.Text = grafoDijkstra.GetTotalPercurso(percurso) + "";
                     break;           
             }
             
@@ -122,7 +125,7 @@ namespace apCaminhosMarte
         }
 
         // Método que verifica qual caminho é mais curto dentre os caminhos obtidos
-        private PilhaLista<Movimento> MelhorCaminhoDist ()
+        private PilhaLista<Movimento> MelhorCaminhoDistancia ()
         {
             No<PilhaLista<Movimento>> umCaminho = caminhos.Inicio;
             PilhaLista<Movimento> melhorCaminho = umCaminho.Info;
@@ -140,7 +143,8 @@ namespace apCaminhosMarte
             return melhorCaminho;
         }
 
-        private PilhaLista<Movimento> MelhorCaminhoTemp ()
+        // Método que obtém o caminho com menor tempo gasto
+        private PilhaLista<Movimento> MelhorCaminhoTempo ()
         {
             No<PilhaLista<Movimento>> umCaminho = caminhos.Inicio;
             PilhaLista<Movimento> melhorCaminho = umCaminho.Info;
@@ -159,6 +163,7 @@ namespace apCaminhosMarte
             return melhorCaminho;
         }
 
+        // Método que obtém o caminho com menor custo gasto
         private PilhaLista<Movimento> MelhorCaminhoCusto ()
         {
             No<PilhaLista<Movimento>> umCaminho = caminhos.Inicio;
@@ -293,15 +298,15 @@ namespace apCaminhosMarte
             var rb = GetCriterio();
             switch (rb.Name)
             {
-                case "rbDistancia": melhorCaminho = MelhorCaminhoDist();
+                case "rbDistancia": melhorCaminho = MelhorCaminhoDistancia ();
                                     txtTotal.Text = ObterDistancia(melhorCaminho) + "";
                     break;
 
-                case "rbTempo": melhorCaminho = MelhorCaminhoTemp();
+                case "rbTempo": melhorCaminho = MelhorCaminhoTempo ();
                                 txtTotal.Text = ObterTempo(melhorCaminho) + "";
                     break;
 
-                case "rbCusto": melhorCaminho = MelhorCaminhoCusto();
+                case "rbCusto": melhorCaminho = MelhorCaminhoCusto ();
                                 txtTotal.Text = ObterCusto(melhorCaminho) + "";
                     break;
             }
@@ -415,6 +420,7 @@ namespace apCaminhosMarte
             DesenharCaminho(melhorCaminho);
         }
 
+        // Método que obtém o RadioButton (gbCriterio) selecionado pelo usuário
         private RadioButton GetCriterio ()
         {
             foreach (RadioButton rdo in gbCriterio.Controls.OfType<RadioButton>())
@@ -424,6 +430,7 @@ namespace apCaminhosMarte
             return null;
         }
 
+        // Método que obtém o RadioButton (gbMetodo) selecionado pelo usuário
         private RadioButton GetMetodo()
         {
             foreach (RadioButton rdo in gbMetodo.Controls.OfType<RadioButton>())
@@ -433,6 +440,7 @@ namespace apCaminhosMarte
             return null;
         }
 
+        // Método que inicializa o grafoDijkstra a partir de um critério escolhido pelo usuário
         private void InicializarGrafo ()
         {
             var rb = GetCriterio();
@@ -452,13 +460,14 @@ namespace apCaminhosMarte
             }
         }
 
+        // Método que retorna uma pilha de Movimento a partir de um vetor de Movimento
         private PilhaLista<Movimento> GetPilha (Movimento[] percurso)
         {
             var pilhaLista = new PilhaLista<Movimento>();
 
             for (int i = 0; i < percurso.Length - 1; i++)
             {
-                var lc = grafoBacktracking.GetValorEntreCidades(percurso[i].Origem, percurso[i + 1].Origem);
+                var lc = grafoBacktracking.GetLigacaoEntreCidades(percurso[i].Origem, percurso[i + 1].Origem);
                 pilhaLista.Empilhar(new Movimento(percurso[i].Origem, percurso[i + 1].Origem, lc));
             }
 
