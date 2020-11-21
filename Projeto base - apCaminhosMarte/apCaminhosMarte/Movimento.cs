@@ -9,7 +9,7 @@ using System.Xml.Schema;
 namespace apCaminhosMarte
 {
     // Nome: Gabriel Villar Scalese     RA: 19171
-    // Nome: Nícolas Maisonnette Duarte RA: 19192
+    // Nome: Guilherme Augusto Teixeira RA: 19174
     class Movimento
     {
         // Atributo que representa a cidade de origem
@@ -17,13 +17,16 @@ namespace apCaminhosMarte
         private int destino;
         // Atributo que representa os dados do percurso
         private LigacaoCidade lc;
+        // Atributo que representa o índice atual durante a busca de caminhos (recursiva e com pilha)
         private int indice;
 
+        // Construtor da classe
         public Movimento (string origem)
         {
             Origem = int.Parse(origem);
         }
 
+        // Construtor da classe
         public Movimento (int origem , int destino, LigacaoCidade lc, int indice)
         {
             Origem = origem;
@@ -53,6 +56,7 @@ namespace apCaminhosMarte
             }
         }
 
+        // Propriedade do atributo destino
         public int Destino
         {
             get => destino;
@@ -78,6 +82,7 @@ namespace apCaminhosMarte
             }
         }
 
+        // Propriedade do atributo indice
         public int Indice
         {
             get => indice;

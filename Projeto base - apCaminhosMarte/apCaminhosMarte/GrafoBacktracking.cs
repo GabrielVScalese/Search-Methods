@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 namespace apCaminhosMarte
 {
     // Nome: Gabriel Villar Scalese     RA: 19171
-    // Nome: Nícolas Maisonnette Duarte RA: 19192
+    // Nome: Guilherme Augusto Teixeira RA: 19174
     class GrafoBacktracking
     {
         // Atributo que representa um grafo

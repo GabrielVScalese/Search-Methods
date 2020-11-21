@@ -7,7 +7,7 @@ using System.Windows.Forms;
 namespace apCaminhosMarte
 {
     // Nome: Gabriel Villar Scalese     RA: 19171
-    // Nome: Nícolas Maisonnette Duarte RA: 19192
+    // Nome: Guilherme Augusto Teixeira RA: 19174
     public class ArvoreBinaria<Dado> where Dado : IComparable<Dado>
     {
         // Atributos que representa a raiz
@@ -141,6 +141,7 @@ namespace apCaminhosMarte
             }
         }
 
+        // Método que retorna a altura de um no
         public int getAltura(NoArvore<Dado> no)
         {
             if (no != null)
@@ -149,6 +150,7 @@ namespace apCaminhosMarte
                 return -1;
         }
 
+        // Método que chama o método privativo de inserção balanceada
         public NoArvore<Dado> InserirBalanceado (Dado item)
         {
             if (raiz == null)
@@ -159,6 +161,7 @@ namespace apCaminhosMarte
             return raiz;
         }
 
+        // Método auxiliar que realiza a inserção de um valor de maneira a manter a árvore balanceada
         private NoArvore<Dado> InserirBalanceado(Dado item, NoArvore<Dado> noAtual)
         {
             if (noAtual == null)

@@ -5,7 +5,7 @@ using System.Text;
 namespace apCaminhosMarte
 {
     // Nome: Gabriel Villar Scalese     RA: 19171
-    // Nome: Nícolas Maisonnette Duarte RA: 19192
+    // Nome: Guilherme Augusto Teixeira RA: 19174
     public class NoArvore<Dado> : IComparable<NoArvore<Dado>> where Dado : IComparable<Dado>
     {
         // Atributo que representa a informação do ramo/raiz
@@ -71,12 +71,14 @@ namespace apCaminhosMarte
             return info.Equals(obj.info);
         }
 
+        // Propriedade do atributo altura
         public int Altura 
         { 
             get => altura; 
             set => altura = value;
         }
 
+        // Propriedade do atributo estaMarcadoParaMorrer
         public bool EstaMarcadoParaMorrer
         { 
             get => estaMarcadoParaMorrer; 
