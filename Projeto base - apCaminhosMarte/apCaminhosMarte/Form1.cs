@@ -15,7 +15,7 @@ using System.Windows.Forms;
 namespace apCaminhosMarte
 {
     // Nome: Gabriel Villar Scalese     RA: 19171
-    // Nome: Nícolas Maisonnette Duarte RA: 19192
+    // Nome: Guilherme Augusto Felisberto Teixeira  RA: 19174
     public partial class FrmMapa : Form
     {
         // Árvore contendo as cidades do arquivo texto
